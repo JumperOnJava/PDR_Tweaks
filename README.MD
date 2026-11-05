@@ -11,15 +11,18 @@ three modes:
     - sum mode (default): spins forward/reverse based on inputs, doesn't spin if both inputs active
     - latest mode: spins based on latest input. If forward is active and in that time reverse is enabled it sping in reverse
     - power-reverse mode: spins if spin input is on (renames forward in ui); reverses if reverse input is passed
+create the model similar to create mod gearshift, and copy its texture, i'll modify it later myself. make it some weird hue color to differentiate, but keep original texture somewhere nearby for me to edit
+add it into create mod creative inventory tab
 
-ProjectPDR-Create material-list compatibility:
-    Create mod has schematicannon which generates and you can put material list onto clipboard.
-    I want player to be able to quickly get all items needed for material list
-    When player right clicks onto transmutation table it generates nbt chests with items with needed items for this material list
-    What to check (in order):
-        - can player use this table (does team/unteamness match)
-        - does player/team has enough EMC to create this recipe (count chests in too)
-        - does player/team has knowledge about all the items in recipe
-    There is also sneak mode which allows to get only unchecked items, and automatically checks them in clipboard 
-    or gets only as much items as player can with their current team/personal knowledge/emc score (check them too)
-    Make sure you use same correct rules that projectpdr mod uses 
+ProjectPDR-Create material list compatibility:
+Create mod has schematicannon which generates and you can put material list onto clipboard.
+I want player to be able to quickly get all items needed for material list
+When player right clicks onto transmutation table it generates nbt chests with items with needed items for this material list
+What to check (in order):
+    - can player use this table (does team/unteamness match)
+    - does player/team has enough EMC to create this recipe (count chests in too)
+    - does player/team has knowledge about all the items in recipe
+There is also sneak mode which allows to get only unchecked items, and automatically checks them in clipboard 
+or gets only as much items as player can with their current team/personal knowledge/emc score (check them too)
+Make sure you use same correct rules that projectpdr mod uses for determining knowledge/score
+chests appear on top of transmutation table as items 
