@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+bin/
+
+# Minecraft run directory and crash reports
+run/
+runs/
+eclipse/
+*.log
+
+# macOS
+.DS_Store
