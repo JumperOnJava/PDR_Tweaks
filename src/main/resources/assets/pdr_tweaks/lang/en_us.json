@@ -1,0 +1,14 @@
+{
+  "block.pdr_tweaks.smart_gearshift": "Smart Gearshift",
+  "gui.pdr_tweaks.smart_gearshift": "Smart Gearshift",
+  "gui.pdr_tweaks.smart_gearshift.forward": "Forward",
+  "gui.pdr_tweaks.smart_gearshift.reverse": "Reverse",
+  "gui.pdr_tweaks.smart_gearshift.swap": "Swap",
+  "gui.pdr_tweaks.smart_gearshift.mode.sum": "Mode: Sum",
+  "gui.pdr_tweaks.smart_gearshift.mode.latest": "Mode: Latest",
+  "gui.pdr_tweaks.smart_gearshift.mode.power_reverse": "Mode: Power-Reverse",
+  "gui.pdr_tweaks.material_list.team_mismatch": "This transmutation table is bound to a different team!",
+  "gui.pdr_tweaks.material_list.nothing_to_spawn": "No unchecked items to spawn.",
+  "gui.pdr_tweaks.material_list.cannot_spawn_any": "Cannot spawn any items: missing EMC or knowledge.",
+  "gui.pdr_tweaks.material_list.spawned": "Spawned %s item types (%s total items) in chests on the table."
+}

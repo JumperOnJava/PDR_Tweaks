@@ -1,0 +1,8 @@
+{
+  "parent": "create:block/sequenced_gearshift/idle",
+  "textures": {
+    "1": "create:block/brass_gearbox",
+    "4": "create:block/sequenced_gearshift",
+    "particle": "pdr_tweaks:block/smart_gearshift_base"
+  }
+}

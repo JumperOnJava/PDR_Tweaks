@@ -1,0 +1,24 @@
+{
+  "multipart": [
+    { "when": { "axis": "z" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/block" } },
+    { "when": { "axis": "x" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/block", "y": 90 } },
+    { "when": { "axis": "y" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/block", "x": 90 } },
+    { "when": { "axis": "y", "mode": "sum" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_mode_sum" } },
+    { "when": { "axis": "y", "mode": "latest" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_mode_latest" } },
+    { "when": { "axis": "y", "mode": "power_reverse" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_mode_power_reverse" } },
+    { "when": { "axis": "x", "mode": "sum" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_mode_sum", "x": 90, "y": 90 } },
+    { "when": { "axis": "x", "mode": "latest" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_mode_latest", "x": 90, "y": 90 } },
+    { "when": { "axis": "x", "mode": "power_reverse" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_mode_power_reverse", "x": 90, "y": 90 } },
+    { "when": { "axis": "z", "mode": "sum" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_mode_sum", "x": 90, "y": 180 } },
+    { "when": { "axis": "z", "mode": "latest" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_mode_latest", "x": 90, "y": 180 } },
+    { "when": { "axis": "z", "mode": "power_reverse" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_mode_power_reverse", "x": 90, "y": 180 } },
+    { "when": { "axis": "y", "direction": "inactive" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_state_off" } },
+    { "when": { "axis": "y", "direction": "active" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_state_on" } },
+    { "when": { "axis": "y", "direction": "reverse" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_state_reverse" } },
+    { "when": { "axis": "x", "direction": "inactive" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_state_off", "x": 90, "y": 90 } },
+    { "when": { "axis": "x", "direction": "active" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_state_on", "x": 90, "y": 90 } },
+    { "when": { "axis": "x", "direction": "reverse" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_state_reverse", "x": 90, "y": 90 } },
+    { "when": { "axis": "z", "direction": "inactive" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_state_off", "x": 90, "y": 180 } },
+    { "when": { "axis": "z", "direction": "active" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_state_on", "x": 90, "y": 180 } },
+    { "when": { "axis": "z", "direction": "reverse" }, "apply": { "model": "pdr_tweaks:block/smart_gearshift/overlay_state_reverse", "x": 90, "y": 180 } }  ]
+}

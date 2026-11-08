@@ -1,0 +1,8 @@
+[[configurations]]
+id = 'gradle:task:["",":"]:runClient'
+name = "PDR_Tweaks [runClient]"
+kind = "gradle"
+command = "/Users/javajumper/Sources/PDR_Tweaks/gradlew"
+args = ["runClient"]
+env = { JAVA_HOME = "/opt/homebrew/Cellar/openjdk@21/21.0.12.1/libexec/openjdk.jdk/Contents/Home" }
+debug-adapter = "java-debug"

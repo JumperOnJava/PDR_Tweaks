@@ -1,0 +1,17 @@
+{
+  "textures": {
+    "overlay": "pdr_tweaks:block/smart_gearshift_mode_latest"
+  },
+  "elements": [
+    {
+      "from": [-0.025, -0.025, -0.025],
+      "to": [16.025, 16.025, 16.025],
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#overlay"},
+        "east": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#overlay"},
+        "south": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#overlay"},
+        "west": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#overlay"}
+      }
+    }
+  ]
+}
