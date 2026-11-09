@@ -83,35 +83,70 @@ public class TransmutationTableMaterialList {
         if (provider == null) return;
 
         boolean sneak = player.isShiftKeyDown();
+        BigInteger availableEmc = provider.getEmc();
 
-        // === Filter entries based on mode ===
-        List<MaterialEntry> candidates;
-        if (sneak) {
-            // Sneak mode: only unchecked items
-            candidates = entries.stream().filter(e -> !e.checked).toList();
-        } else {
-            candidates = entries;
-        }
+        // Checked entries are already obtained — they don't count toward the list
+        List<MaterialEntry> unchecked = entries.stream().filter(e -> !e.checked).toList();
 
-        if (candidates.isEmpty()) {
+        if (unchecked.isEmpty()) {
             player.sendSystemMessage(Component.translatable("gui.pdr_tweaks.material_list.nothing_to_spawn"));
             event.setCanceled(true);
             return;
         }
 
-        // === CHECK 2: EMC and CHECK 3: Knowledge (per item) ===
-        BigInteger availableEmc = provider.getEmc();
-        List<MaterialEntry> spawnable = new ArrayList<>();
+        if (!sneak) {
+            // === Normal click: full-list mode ===
+            // Give items ONLY if every unchecked entry can be satisfied:
+            // knowledge for all of them + enough EMC for the total cost.
+            BigInteger totalNeeded = BigInteger.ZERO;
+            List<MaterialEntry> missingKnowledge = new ArrayList<>();
 
-        for (MaterialEntry entry : candidates) {
+            for (MaterialEntry entry : unchecked) {
+                if (!provider.hasKnowledge(ItemInfo.fromStack(entry.stack))) {
+                    missingKnowledge.add(entry);
+                }
+                long itemEmc = IEMCProxy.INSTANCE.getValue(entry.stack);
+                totalNeeded = totalNeeded.add(BigInteger.valueOf(itemEmc).multiply(BigInteger.valueOf(entry.amount)));
+            }
+
+            BigInteger missingEmc = totalNeeded.subtract(availableEmc);
+            boolean fullySatisfiable = missingKnowledge.isEmpty() && missingEmc.signum() <= 0;
+
+            if (!fullySatisfiable) {
+                // Spawn nothing; report what's missing instead
+                player.sendSystemMessage(Component.translatable("gui.pdr_tweaks.material_list.cannot_fully_satisfy"));
+                if (!missingKnowledge.isEmpty()) {
+                    player.sendSystemMessage(Component.translatable("gui.pdr_tweaks.material_list.missing_knowledge"));
+                    for (MaterialEntry entry : missingKnowledge) {
+                        player.sendSystemMessage(Component.literal("- ")
+                                .append(entry.stack().getHoverName().copy().append(" x" + entry.amount())));
+                    }
+                }
+                if (missingEmc.signum() > 0) {
+                    player.sendSystemMessage(Component.translatable("gui.pdr_tweaks.material_list.missing_emc",
+                            missingEmc.toString(), totalNeeded.toString(), availableEmc.toString()));
+                }
+                event.setCanceled(true);
+                return;
+            }
+
+            // Fully satisfiable — give the whole (unchecked) list
+            spawnChestsOnTable(serverLevel, pos, unchecked);
+            int totalItems = unchecked.stream().mapToInt(e -> e.amount).sum();
+            player.sendSystemMessage(Component.translatable("gui.pdr_tweaks.material_list.spawned",
+                    unchecked.size(), totalItems));
+            event.setCanceled(true);
+            return;
+        }
+
+        // === Sneak click: partial mode — spawn whatever is allowed, mark it checked ===
+        List<MaterialEntry> spawnable = new ArrayList<>();
+        for (MaterialEntry entry : unchecked) {
             ItemInfo info = ItemInfo.fromStack(entry.stack);
             long itemEmc = IEMCProxy.INSTANCE.getValue(entry.stack);
             BigInteger totalEmc = BigInteger.valueOf(itemEmc).multiply(BigInteger.valueOf(entry.amount));
 
-            boolean hasKnowledge = provider.hasKnowledge(info);
-            boolean hasEmc = totalEmc.compareTo(availableEmc) <= 0;
-
-            if (hasKnowledge && hasEmc) {
+            if (provider.hasKnowledge(info) && totalEmc.compareTo(availableEmc) <= 0) {
                 spawnable.add(entry);
                 availableEmc = availableEmc.subtract(totalEmc);
             }
@@ -127,10 +162,8 @@ public class TransmutationTableMaterialList {
         spawnChestsOnTable(serverLevel, pos, spawnable);
 
         // === Sneak mode: mark spawned items as checked in clipboard ===
-        if (sneak) {
-            ClipboardContent updated = markEntriesAsChecked(clipboardContent, spawnable);
-            heldStack.set(AllDataComponents.CLIPBOARD_CONTENT, updated);
-        }
+        ClipboardContent updated = markEntriesAsChecked(clipboardContent, spawnable);
+        heldStack.set(AllDataComponents.CLIPBOARD_CONTENT, updated);
 
         // Cancel the normal transmutation table GUI from opening
         event.setCanceled(true);

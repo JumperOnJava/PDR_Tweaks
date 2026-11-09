@@ -10,5 +10,8 @@
   "gui.pdr_tweaks.material_list.team_mismatch": "This transmutation table is bound to a different team!",
   "gui.pdr_tweaks.material_list.nothing_to_spawn": "No unchecked items to spawn.",
   "gui.pdr_tweaks.material_list.cannot_spawn_any": "Cannot spawn any items: missing EMC or knowledge.",
+  "gui.pdr_tweaks.material_list.cannot_fully_satisfy": "Cannot fulfill the whole list yet:",
+  "gui.pdr_tweaks.material_list.missing_knowledge": "Missing knowledge for:",
+  "gui.pdr_tweaks.material_list.missing_emc": "Missing EMC: %s (need %s total, have %s)",
   "gui.pdr_tweaks.material_list.spawned": "Spawned %s item types (%s total items) in chests on the table."
 }
