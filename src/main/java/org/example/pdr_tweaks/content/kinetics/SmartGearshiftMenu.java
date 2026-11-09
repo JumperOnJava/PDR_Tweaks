@@ -73,16 +73,20 @@ public class SmartGearshiftMenu extends AbstractContainerMenu {
     }
 
     private void initSlots(Inventory playerInventory) {
-        addSlot(new SlotItemHandler(ghostInventory, FORWARD_FIRST, 44, 30));
-        addSlot(new SlotItemHandler(ghostInventory, FORWARD_LAST, 62, 30));
-        addSlot(new SlotItemHandler(ghostInventory, REVERSE_FIRST, 98, 30));
-        addSlot(new SlotItemHandler(ghostInventory, REVERSE_LAST, 116, 30));
+        // Vertical address pairs, mirroring Create's Linked Controller: each frequency
+        // is two slots stacked at the same X (top = first, bottom = last), pairs side by side.
+        // Pair group centered in the 176-wide window: reverse left (x=53), forward right (x=107).
+        // NOTE: addSlot order must match handler indices (slotId == ghostInventory index).
+        addSlot(new SlotItemHandler(ghostInventory, FORWARD_FIRST, 107, 30));
+        addSlot(new SlotItemHandler(ghostInventory, FORWARD_LAST, 107, 48));
+        addSlot(new SlotItemHandler(ghostInventory, REVERSE_FIRST, 53, 30));
+        addSlot(new SlotItemHandler(ghostInventory, REVERSE_LAST, 53, 48));
 
         for (int row = 0; row < 3; ++row)
             for (int col = 0; col < 9; ++col)
-                addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
+                addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 102 + row * 18));
         for (int col = 0; col < 9; ++col)
-            addSlot(new Slot(playerInventory, col, 8 + col * 18, 142));
+            addSlot(new Slot(playerInventory, col, 8 + col * 18, 160));
     }
 
     public SmartGearshiftBlockEntity getBlockEntity() {
@@ -118,20 +122,22 @@ public class SmartGearshiftMenu extends AbstractContainerMenu {
     @Override
     public void clicked(int slotId, int dragType, net.minecraft.world.inventory.ClickType clickType, @NotNull Player player) {
         if (slotId >= 0 && slotId < GHOST_SLOTS) {
+            // slotId is the menu slot position, not necessarily the handler index — resolve it
+            int handlerIndex = getSlot(slotId).getContainerSlot();
             if (clickType == net.minecraft.world.inventory.ClickType.PICKUP) {
                 ItemStack carried = getCarried();
                 if (carried.isEmpty()) {
-                    ghostInventory.setStackInSlot(slotId, ItemStack.EMPTY);
+                    ghostInventory.setStackInSlot(handlerIndex, ItemStack.EMPTY);
                 } else {
                     ItemStack copy = carried.copy();
                     copy.setCount(1);
-                    ghostInventory.setStackInSlot(slotId, copy);
+                    ghostInventory.setStackInSlot(handlerIndex, copy);
                 }
                 getSlot(slotId).setChanged();
                 return;
             }
             if (clickType == net.minecraft.world.inventory.ClickType.CLONE && player.isCreative()) {
-                ItemStack stack = ghostInventory.getStackInSlot(slotId).copy();
+                ItemStack stack = ghostInventory.getStackInSlot(handlerIndex).copy();
                 stack.setCount(stack.getMaxStackSize());
                 setCarried(stack);
                 return;

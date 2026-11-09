@@ -23,6 +23,8 @@ public class SmartGearshiftBlockEntity extends SplitShaftBlockEntity {
     private int reverseSignal = 0;
     private boolean directPower = false;
     private Boolean lastActiveForward = null;
+    private boolean prevForwardActive = false;
+    private boolean prevReverseActive = false;
 
     protected DualLinkBehaviour linkBehaviour;
 
@@ -37,24 +39,18 @@ public class SmartGearshiftBlockEntity extends SplitShaftBlockEntity {
     }
 
     private void onForwardSignal(int power) {
-        boolean wasActive = forwardSignal > 0;
         forwardSignal = power;
-        if (!wasActive && forwardSignal > 0) lastActiveForward = true;
         onSignalChanged();
     }
 
     private void onReverseSignal(int power) {
-        boolean wasActive = reverseSignal > 0;
         reverseSignal = power;
-        if (!wasActive && reverseSignal > 0) lastActiveForward = false;
         onSignalChanged();
     }
 
     public void onRedstoneChanged(boolean powered) {
-        if (directPower != powered) {
-            directPower = powered;
-            onSignalChanged();
-        }
+        directPower = powered;
+        onSignalChanged();
     }
 
     /**
@@ -71,8 +67,11 @@ public class SmartGearshiftBlockEntity extends SplitShaftBlockEntity {
                 yield reverse ? SmartGearshiftDirection.REVERSE : SmartGearshiftDirection.ACTIVE;
             }
             case LATEST -> {
-                if (lastActiveForward == null) yield SmartGearshiftDirection.ACTIVE;
-                yield lastActiveForward ? SmartGearshiftDirection.ACTIVE : SmartGearshiftDirection.REVERSE;
+                // Latest ACTIVE input wins; if it dropped out, the remaining active input takes over.
+                if (forward && reverse)
+                    yield lastActiveForward == null || lastActiveForward
+                            ? SmartGearshiftDirection.ACTIVE : SmartGearshiftDirection.REVERSE;
+                yield reverse ? SmartGearshiftDirection.REVERSE : SmartGearshiftDirection.ACTIVE;
             }
             case POWER_REVERSE ->
                     !forward ? SmartGearshiftDirection.INACTIVE : reverse ? SmartGearshiftDirection.REVERSE : SmartGearshiftDirection.ACTIVE;
@@ -80,6 +79,16 @@ public class SmartGearshiftBlockEntity extends SplitShaftBlockEntity {
     }
 
     private void onSignalChanged() {
+        boolean forwardActive = forwardSignal > 0 || directPower;
+        boolean reverseActive = reverseSignal > 0;
+
+        // Rising-edge tracking: the most recently activated input becomes "latest".
+        // Reverse wins if both rise in the same tick.
+        if (forwardActive && !prevForwardActive) lastActiveForward = true;
+        if (reverseActive && !prevReverseActive) lastActiveForward = false;
+        prevForwardActive = forwardActive;
+        prevReverseActive = reverseActive;
+
         if (level == null || level.isClientSide) return;
         sendData();
         applyDirectionChange();
